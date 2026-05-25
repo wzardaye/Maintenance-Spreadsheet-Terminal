@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/portal_dokumen.html"
+    }
+  ]
+}
