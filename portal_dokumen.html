@@ -32,13 +32,13 @@
 </head>
 <body class="bg-custom min-h-screen relative text-gray-800">
     
-    <!-- Global Blur Overlay (creates the blurred background effect) -->
+    <!-- Global Blur Overlay -->
     <div class="absolute inset-0 bg-white/40 backdrop-blur-sm fixed pointer-events-none"></div>
 
     <!-- Hovering Header -->
     <header class="fixed top-0 left-0 right-0 z-50 glass-panel shadow-sm">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-center">
-            <!-- Logo area (No buttons) -->
+            <!-- Logo area -->
             <div class="flex items-center gap-3">
                 <i data-lucide="briefcase" class="w-8 h-8 text-blue-800"></i>
                 <span class="text-2xl font-bold text-gray-900 tracking-tight">WorkplaceHub</span>
@@ -57,7 +57,7 @@
         <!-- 6 Buttons Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
             
-            <!-- Button 1 -->
+            <!-- Button 1: PM -->
             <a href="LINK_DRIVE_ANDA_DI_SINI" target="_blank" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group">
                 <div class="p-4 bg-green-400/20 rounded-full group-hover:bg-green-400/30 group-hover:scale-110 transition-all">
                     <i data-lucide="folder-kanban" class="w-10 h-10 text-green-500"></i>
@@ -65,7 +65,7 @@
                 <span class="font-semibold text-lg text-gray-900">PM</span>
             </a>
 
-            <!-- Button 2 -->
+            <!-- Button 2: CM -->
             <a href="LINK_DRIVE_ANDA_DI_SINI" target="_blank" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group">
                 <div class="p-4 bg-sky-400/20 rounded-full group-hover:bg-sky-400/30 group-hover:scale-110 transition-all">
                     <i data-lucide="folder-search" class="w-10 h-10 text-sky-500"></i>
@@ -73,7 +73,7 @@
                 <span class="font-semibold text-lg text-gray-900">CM</span>
             </a>
 
-            <!-- Button 3 -->
+            <!-- Button 3: BM -->
             <a href="LINK_DRIVE_ANDA_DI_SINI" target="_blank" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group">
                 <div class="p-4 bg-red-500/10 rounded-full group-hover:bg-red-500/20 group-hover:scale-110 transition-all">
                     <i data-lucide="folder-check" class="w-10 h-10 text-red-600"></i>
@@ -81,15 +81,15 @@
                 <span class="font-semibold text-lg text-gray-900">BM</span>
             </a>
 
-            <!-- Button 4 -->
-            <a href="LINK_DRIVE_ANDA_DI_SINI" target="_blank" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group">
+            <!-- Button 4: YOKOTEN -->
+            <button id="btnYokoten" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer w-full">
                 <div class="p-4 bg-yellow-400/20 rounded-full group-hover:bg-yellow-400/30 group-hover:scale-110 transition-all">
                     <i data-lucide="folder-sync" class="w-10 h-10 text-yellow-600"></i>
                 </div>
                 <span class="font-semibold text-lg text-gray-900">YOKOTEN</span>
-            </a>
+            </button>
 
-            <!-- Button 5 -->
+            <!-- Button 5: Arsip -->
             <a href="LINK_DRIVE_ANDA_DI_SINI" target="_blank" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group">
                 <div class="p-4 bg-rose-600/10 rounded-full group-hover:bg-rose-600/20 group-hover:scale-110 transition-all">
                     <i data-lucide="folder-archive" class="w-10 h-10 text-rose-700"></i>
@@ -97,7 +97,7 @@
                 <span class="font-semibold text-lg text-gray-900">Arsip Tahun Lalu</span>
             </a>
 
-            <!-- Button 6 -->
+            <!-- Button 6: Admin Page -->
             <a href="LINK_DRIVE_ANDA_DI_SINI" target="_blank" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group">
                 <div class="p-4 bg-indigo-600/10 rounded-full group-hover:bg-indigo-600/20 group-hover:scale-110 transition-all">
                     <i data-lucide="settings" class="w-10 h-10 text-indigo-700"></i>
@@ -119,7 +119,7 @@
                 <p class="text-gray-600 text-md mb-4">Anda akan masuk ke link berikut ini:</p>
                 
                 <!-- Display Link Area -->
-                <div class="bg-gray-100/80 p-4 rounded-xl mb-8 break-all border border-gray-200 shadow-sm">
+                <div class="bg-gray-100/80 p-4 rounded-xl mb-8 break-all border border-gray-200 shadow-sm max-h-32 overflow-y-auto">
                     <p id="modalLinkText" class="text-sm font-mono text-blue-700 font-medium select-all"></p>
                 </div>
                 
@@ -136,69 +136,186 @@
         </div>
     </div>
 
+    <!-- Yokoten Projects Modal Overlay -->
+    <div id="yokotenModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center bg-gray-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0">
+        <div class="bg-white/95 backdrop-blur-lg border border-white/50 p-6 md:p-8 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="yokotenModalContent">
+            
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-yellow-400/20 rounded-lg">
+                        <i data-lucide="folder-sync" class="w-6 h-6 text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">Daftar Proyek YOKOTEN</h3>
+                </div>
+                <button id="btnYokotenClose" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Projects List -->
+            <div class="flex-1 overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                
+                <!-- Project 1 -->
+                <div class="group bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:shadow-md hover:border-yellow-300 transition-all cursor-pointer project-card" data-url="LINK_PROYEK_EFISIENSI_LINE_A">
+                    <div class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop" alt="Project 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h4 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">Efisiensi Perakitan Line A</h4>
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">Penerapan alat bantu baru untuk mengurangi waktu siklus pada stasiun kerja 3, meningkatkan output harian sebesar 15%.</p>
+                        <div class="flex items-center gap-2 mt-auto">
+                            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-700">BP</div>
+                            <span class="text-xs font-medium text-gray-500">Budi Prakoso (Tim Produksi)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="group bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:shadow-md hover:border-yellow-300 transition-all cursor-pointer project-card" data-url="LINK_PROYEK_REDUKSI_DEFECT">
+                    <div class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=400&auto=format&fit=crop" alt="Project 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h4 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">Reduksi Defect Pengecatan</h4>
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">Standarisasi suhu dan kelembaban ruang oven untuk menekan cacat 'orange peel' dari 3% menjadi 0.5%.</p>
+                        <div class="flex items-center gap-2 mt-auto">
+                            <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-xs font-bold text-green-700">SA</div>
+                            <span class="text-xs font-medium text-gray-500">Siti Aminah (Quality Control)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="group bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:shadow-md hover:border-yellow-300 transition-all cursor-pointer project-card" data-url="LINK_PROYEK_PENGHEMATAN_ENERGI">
+                    <div class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=400&auto=format&fit=crop" alt="Project 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h4 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">Penghematan Energi Kompresor</h4>
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">Pemasangan sensor gerak dan katup otomatis untuk mematikan aliran udara bertekanan saat mesin tidak beroperasi.</p>
+                        <div class="flex items-center gap-2 mt-auto">
+                            <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-xs font-bold text-purple-700">AS</div>
+                            <span class="text-xs font-medium text-gray-500">Agus Salim (Maintenance)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- Script to render icons and handle modal logic -->
     <script>
         // Render Lucide Icons
         lucide.createIcons();
 
-        // Modal Elements
+        // --- Confirmation Modal Elements ---
         const modal = document.getElementById('confirmationModal');
         const modalContent = document.getElementById('modalContent');
         const modalLinkText = document.getElementById('modalLinkText');
         const btnDecline = document.getElementById('btnDecline');
         const btnConfirm = document.getElementById('btnConfirm');
-        
         let pendingUrl = '';
 
-        // Select all the drive links in the main grid
+        // --- Yokoten Modal Elements ---
+        const btnYokoten = document.getElementById('btnYokoten');
+        const yokotenModal = document.getElementById('yokotenModal');
+        const yokotenModalContent = document.getElementById('yokotenModalContent');
+        const btnYokotenClose = document.getElementById('btnYokotenClose');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        // Select drive links (excluding the Yokoten button which is now a <button>)
         const driveLinks = document.querySelectorAll('main .grid a');
 
-        // Add click event to all 6 buttons
+        // Function to open Confirmation Modal
+        function openConfirmation(url) {
+            pendingUrl = url;
+            modalLinkText.textContent = pendingUrl;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        // Add click event to standard drive links
         driveLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default direct navigation
-                pendingUrl = this.href;
-                modalLinkText.textContent = pendingUrl;
-                
-                // Show modal with smooth transition
-                modal.classList.remove('hidden');
-                // Small delay to allow display change before applying opacity transition
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    modalContent.classList.remove('scale-95');
-                    modalContent.classList.add('scale-100');
-                }, 10);
+                e.preventDefault();
+                openConfirmation(this.href);
             });
         });
 
-        // Function to close modal
+        // --- Yokoten Logic ---
+        
+        // Open Yokoten Modal
+        btnYokoten.addEventListener('click', function() {
+            yokotenModal.classList.remove('hidden');
+            setTimeout(() => {
+                yokotenModal.classList.remove('opacity-0');
+                yokotenModalContent.classList.remove('scale-95');
+                yokotenModalContent.classList.add('scale-100');
+            }, 10);
+        });
+
+        // Close Yokoten Modal function
+        function closeYokotenModal() {
+            yokotenModal.classList.add('opacity-0');
+            yokotenModalContent.classList.remove('scale-100');
+            yokotenModalContent.classList.add('scale-95');
+            setTimeout(() => {
+                yokotenModal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close Yokoten on X button
+        btnYokotenClose.addEventListener('click', closeYokotenModal);
+
+        // Close Yokoten on outside click
+        yokotenModal.addEventListener('click', function(e) {
+            if (e.target === yokotenModal) {
+                closeYokotenModal();
+            }
+        });
+
+        // Click on a Project Card
+        projectCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const projectUrl = this.getAttribute('data-url');
+                
+                // Hide Yokoten Modal temporarily
+                closeYokotenModal();
+                
+                // Small delay to let Yokoten modal start closing before opening confirmation
+                setTimeout(() => {
+                    openConfirmation(projectUrl);
+                }, 200);
+            });
+        });
+
+        // --- Confirmation Modal Close Logic ---
         function closeModal() {
             modal.classList.add('opacity-0');
             modalContent.classList.remove('scale-100');
             modalContent.classList.add('scale-95');
-            
-            // Wait for transition to finish before hiding
             setTimeout(() => {
                 modal.classList.add('hidden');
                 pendingUrl = '';
             }, 300); 
         }
 
-        // Decline Button Action
         btnDecline.addEventListener('click', closeModal);
-
-        // Close when clicking outside the modal box
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 closeModal();
             }
         });
 
-        // Confirm Button Action
         btnConfirm.addEventListener('click', function() {
             if (pendingUrl) {
-                window.open(pendingUrl, '_blank'); // Open Drive link in new tab
-                closeModal(); // Close the modal
+                window.open(pendingUrl, '_blank');
+                closeModal();
             }
         });
     </script>
