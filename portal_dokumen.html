@@ -108,9 +108,99 @@
         </div>
     </main>
 
-    <!-- Script to render icons -->
+    <!-- Confirmation Modal Overlay -->
+    <div id="confirmationModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-gray-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0">
+        <div class="bg-white/90 backdrop-blur-lg border border-white/50 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform scale-95 transition-transform duration-300" id="modalContent">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-blue-100 mb-5 shadow-inner">
+                    <i data-lucide="external-link" class="h-7 w-7 text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Konfirmasi Tautan</h3>
+                <p class="text-gray-600 text-md mb-4">Anda akan masuk ke link berikut ini:</p>
+                
+                <!-- Display Link Area -->
+                <div class="bg-gray-100/80 p-4 rounded-xl mb-8 break-all border border-gray-200 shadow-sm">
+                    <p id="modalLinkText" class="text-sm font-mono text-blue-700 font-medium select-all"></p>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-center gap-4">
+                    <button id="btnDecline" class="flex-1 px-5 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-all duration-200">
+                        Batal
+                    </button>
+                    <button id="btnConfirm" class="flex-1 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5">
+                        Lanjutkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to render icons and handle modal logic -->
     <script>
+        // Render Lucide Icons
         lucide.createIcons();
+
+        // Modal Elements
+        const modal = document.getElementById('confirmationModal');
+        const modalContent = document.getElementById('modalContent');
+        const modalLinkText = document.getElementById('modalLinkText');
+        const btnDecline = document.getElementById('btnDecline');
+        const btnConfirm = document.getElementById('btnConfirm');
+        
+        let pendingUrl = '';
+
+        // Select all the drive links in the main grid
+        const driveLinks = document.querySelectorAll('main .grid a');
+
+        // Add click event to all 6 buttons
+        driveLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default direct navigation
+                pendingUrl = this.href;
+                modalLinkText.textContent = pendingUrl;
+                
+                // Show modal with smooth transition
+                modal.classList.remove('hidden');
+                // Small delay to allow display change before applying opacity transition
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }, 10);
+            });
+        });
+
+        // Function to close modal
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            // Wait for transition to finish before hiding
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                pendingUrl = '';
+            }, 300); 
+        }
+
+        // Decline Button Action
+        btnDecline.addEventListener('click', closeModal);
+
+        // Close when clicking outside the modal box
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Confirm Button Action
+        btnConfirm.addEventListener('click', function() {
+            if (pendingUrl) {
+                window.open(pendingUrl, '_blank'); // Open Drive link in new tab
+                closeModal(); // Close the modal
+            }
+        });
     </script>
 </body>
 </html>
