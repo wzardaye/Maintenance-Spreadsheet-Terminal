@@ -4,7 +4,7 @@
         { "title": "CM", "icon": "folder-search", "colorTheme": "sky", "isDetailed": false, "url": "https://docs.google.com/spreadsheets/d/1tsjmTRWMDlq6MCX8WVM122UEDkMh8C2F812YdSh7NKA/edit?usp=sharing" },
         { "title": "BM", "icon": "folder-check", "colorTheme": "red", "isDetailed": false, "url": "https://docs.google.com/spreadsheets/d/1Kku6njWoU4d3lhyrRvRIfJQvYhY7XuSt9eJ8wRdo7VU/edit?usp=sharing" },
         { "title": "YOKOTEN", "icon": "folder-sync", "colorTheme": "yellow", "isDetailed": true, "url": "" },
-        { "title": "Arsip Tahun Lalu", "icon": "database", "colorTheme": "orange", "isDetailed": false, "url": "LINK_DRIVE_ARSIP" },
+        { "title": "Arsip Tahun Lalu", "icon": "database", "colorTheme": "orange", "isDetailed": false, "url": "http://app.sugity.co.id:3001/item" },
         { "title": "Admin Page", "icon": "settings", "colorTheme": "indigo", "isDetailed": false, "url": "LINK_DRIVE_ADMIN" }
     ],
     "yokotenProjects": [
