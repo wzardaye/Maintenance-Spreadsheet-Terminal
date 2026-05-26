@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/portal_dokumen.html"
+      "destination": "/portal_dinamis.html"
     }
   ]
 }
