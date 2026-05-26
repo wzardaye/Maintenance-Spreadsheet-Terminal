@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Drive - Workplace</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Background image setup */
+        .bg-custom {
+            background-image: url('images/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-custom min-h-screen relative text-gray-800">
+    
+    <!-- Global Blur Overlay -->
+    <div class="absolute inset-0 bg-white/40 backdrop-blur-sm fixed pointer-events-none"></div>
+
+    <!-- Hovering Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-center">
+            <div class="flex items-center gap-3">
+                <img src="images/logo.png" alt="Logo WorkplaceHub" class="w-12 h-12 object-contain">
+                <span class="text-2xl font-bold text-gray-900 tracking-tight" id="siteTitle">WorkplaceHub</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-32 pb-20 px-6 max-w-5xl mx-auto flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
+        
+        <div class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" id="mainHeading">Akses Cepat Dokumen</h1>
+            <p class="text-gray-700" id="mainSubheading">Pilih direktori Google Drive yang ingin Anda tuju.</p>
+        </div>
+
+        <!-- Buttons Grid (Will be populated by JavaScript) -->
+        <div id="buttonGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            <!-- Buttons dynamically rendered here -->
+        </div>
+    </main>
+
+    <!-- Confirmation Modal Overlay -->
+    <div id="confirmationModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-gray-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0">
+        <div class="bg-white/90 backdrop-blur-lg border border-white/50 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform scale-95 transition-transform duration-300" id="modalContent">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-blue-100 mb-5 shadow-inner">
+                    <i data-lucide="external-link" class="h-7 w-7 text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Konfirmasi Tautan</h3>
+                <p class="text-gray-600 text-md mb-4">Anda akan masuk ke link berikut ini:</p>
+                
+                <!-- Display Link Area -->
+                <div class="bg-gray-100/80 p-4 rounded-xl mb-8 break-all border border-gray-200 shadow-sm max-h-32 overflow-y-auto">
+                    <p id="modalLinkText" class="text-sm font-mono text-blue-700 font-medium select-all"></p>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-center gap-4">
+                    <button id="btnDecline" class="flex-1 px-5 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-all duration-200">
+                        Batal
+                    </button>
+                    <button id="btnConfirm" class="flex-1 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5">
+                        Lanjutkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yokoten Projects Modal Overlay -->
+    <div id="yokotenModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center bg-gray-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0">
+        <div class="bg-white/95 backdrop-blur-lg border border-white/50 p-6 md:p-8 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="yokotenModalContent">
+            
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-yellow-400/20 rounded-lg">
+                        <i data-lucide="folder-sync" class="w-6 h-6 text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">Daftar Proyek YOKOTEN</h3>
+                </div>
+                <button id="btnYokotenClose" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Projects List (Will be populated by JavaScript) -->
+            <div id="yokotenProjectList" class="flex-1 overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                <!-- Projects dynamically rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // ==========================================
+        // 1. CONFIGURATION DATA (EDIT BAGIAN INI SAJA)
+        // ==========================================
+        
+        const SITE_CONFIG = {
+            // Konfigurasi 6 Tombol Utama
+            buttons: [
+                { title: "PM", icon: "folder-kanban", colorTheme: "green", isYokoten: false, url: "LINK_DRIVE_PM" },
+                { title: "CM", icon: "folder-search", colorTheme: "sky", isYokoten: false, url: "LINK_DRIVE_CM" },
+                { title: "BM", icon: "folder-check", colorTheme: "red", isYokoten: false, url: "LINK_DRIVE_BM" },
+                { title: "YOKOTEN", icon: "folder-sync", colorTheme: "yellow", isYokoten: true, url: "" }, // isYokoten: true akan memanggil pop-up daftar proyek
+                { title: "Arsip Tahun Lalu", icon: "database", colorTheme: "orange", isYokoten: false, url: "LINK_DRIVE_ARSIP" },
+                { title: "Admin Page", icon: "settings", colorTheme: "indigo", isYokoten: false, url: "LINK_DRIVE_ADMIN" }
+            ],
+
+            // Konfigurasi Proyek Yokoten
+            yokotenProjects: [
+                {
+                    title: "Efisiensi Perakitan Line A",
+                    description: "Penerapan alat bantu baru untuk mengurangi waktu siklus pada stasiun kerja 3, meningkatkan output harian sebesar 15%.",
+                    image: "images/proyek1.jpg",
+                    initiatorInitials: "BP",
+                    initiatorName: "Budi Prakoso (Tim Produksi)",
+                    badgeColor: "blue", // Pilihan: blue, green, purple, red, orange
+                    url: "LINK_PROYEK_EFISIENSI_LINE_A"
+                },
+                {
+                    title: "Reduksi Defect Pengecatan",
+                    description: "Standarisasi suhu dan kelembaban ruang oven untuk menekan cacat 'orange peel' dari 3% menjadi 0.5%.",
+                    image: "images/proyek2.jpg",
+                    initiatorInitials: "SA",
+                    initiatorName: "Siti Aminah (Quality Control)",
+                    badgeColor: "green",
+                    url: "LINK_PROYEK_REDUKSI_DEFECT"
+                },
+                {
+                    title: "Penghematan Energi Kompresor",
+                    description: "Pemasangan sensor gerak dan katup otomatis untuk mematikan aliran udara bertekanan saat mesin tidak beroperasi.",
+                    image: "images/proyek3.jpg",
+                    initiatorInitials: "AS",
+                    initiatorName: "Agus Salim (Maintenance)",
+                    badgeColor: "purple",
+                    url: "LINK_PROYEK_PENGHEMATAN_ENERGI"
+                }
+            ]
+        };
+
+        // ==========================================
+        // 2. RENDERING LOGIC (TIDAK PERLU DIEDIT)
+        // ==========================================
+
+        // Helper untuk memetakan nama warna ke kelas Tailwind
+        const themeMap = {
+            green: { bg: 'bg-green-400/20', hover: 'group-hover:bg-green-400/30', text: 'text-green-500' },
+            sky: { bg: 'bg-sky-400/20', hover: 'group-hover:bg-sky-400/30', text: 'text-sky-500' },
+            red: { bg: 'bg-red-500/10', hover: 'group-hover:bg-red-500/20', text: 'text-red-600' },
+            yellow: { bg: 'bg-yellow-400/20', hover: 'group-hover:bg-yellow-400/30', text: 'text-yellow-600' },
+            orange: { bg: 'bg-orange-500/10', hover: 'group-hover:bg-orange-500/20', text: 'text-orange-600' },
+            indigo: { bg: 'bg-indigo-600/10', hover: 'group-hover:bg-indigo-600/20', text: 'text-indigo-700' },
+            blue: { bg: 'bg-blue-100', text: 'text-blue-700' },
+            purple: { bg: 'bg-purple-100', text: 'text-purple-700' }
+        };
+
+        // Render Tombol Utama
+        const buttonGrid = document.getElementById('buttonGrid');
+        let buttonsHTML = '';
+        
+        SITE_CONFIG.buttons.forEach(btn => {
+            const theme = themeMap[btn.colorTheme] || themeMap.blue;
+            
+            if (btn.isYokoten) {
+                buttonsHTML += `
+                <button id="btnYokoten" class="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer w-full">
+                    <div class="p-4 ${theme.bg} rounded-full ${theme.hover} group-hover:scale-110 transition-all">
+                        <i data-lucide="${btn.icon}" class="w-10 h-10 ${theme.text}"></i>
+                    </div>
+                    <span class="font-semibold text-lg text-gray-900">${btn.title}</span>
+                </button>`;
+            } else {
+                buttonsHTML += `
+                <a href="${btn.url}" class="drive-link glass-panel rounded-2xl p-8 flex flex-col items-center justify-center gap-5 hover:-translate-y-1 hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-xl group">
+                    <div class="p-4 ${theme.bg} rounded-full ${theme.hover} group-hover:scale-110 transition-all">
+                        <i data-lucide="${btn.icon}" class="w-10 h-10 ${theme.text}"></i>
+                    </div>
+                    <span class="font-semibold text-lg text-gray-900">${btn.title}</span>
+                </a>`;
+            }
+        });
+        buttonGrid.innerHTML = buttonsHTML;
+
+        // Render Proyek Yokoten
+        const projectList = document.getElementById('yokotenProjectList');
+        let projectsHTML = '';
+
+        SITE_CONFIG.yokotenProjects.forEach(proj => {
+            const badgeTheme = themeMap[proj.badgeColor] || themeMap.blue;
+            projectsHTML += `
+            <div class="group bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:shadow-md hover:border-yellow-300 transition-all cursor-pointer project-card" data-url="${proj.url}">
+                <div class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                    <img src="${proj.image}" alt="${proj.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="flex-1 flex flex-col justify-center">
+                    <h4 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">${proj.title}</h4>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">${proj.description}</p>
+                    <div class="flex items-center gap-2 mt-auto">
+                        <div class="w-6 h-6 rounded-full ${badgeTheme.bg} flex items-center justify-center text-xs font-bold ${badgeTheme.text}">${proj.initiatorInitials}</div>
+                        <span class="text-xs font-medium text-gray-500">${proj.initiatorName}</span>
+                    </div>
+                </div>
+            </div>`;
+        });
+        projectList.innerHTML = projectsHTML;
+
+        // Render ulang icon SVG setelah DOM diperbarui
+        lucide.createIcons();
+
+        // ==========================================
+        // 3. INTERACTION & MODAL LOGIC 
+        // ==========================================
+
+        const modal = document.getElementById('confirmationModal');
+        const modalContent = document.getElementById('modalContent');
+        const modalLinkText = document.getElementById('modalLinkText');
+        const btnDecline = document.getElementById('btnDecline');
+        const btnConfirm = document.getElementById('btnConfirm');
+        
+        const yokotenModal = document.getElementById('yokotenModal');
+        const yokotenModalContent = document.getElementById('yokotenModalContent');
+        const btnYokotenClose = document.getElementById('btnYokotenClose');
+        
+        let pendingUrl = '';
+
+        // Open Confirmation Modal
+        function openConfirmation(url) {
+            pendingUrl = url;
+            modalLinkText.textContent = pendingUrl;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        // Close Confirmation Modal
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                pendingUrl = '';
+            }, 300); 
+        }
+
+        // Open Yokoten Modal
+        function openYokotenModal() {
+            yokotenModal.classList.remove('hidden');
+            setTimeout(() => {
+                yokotenModal.classList.remove('opacity-0');
+                yokotenModalContent.classList.remove('scale-95');
+                yokotenModalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        // Close Yokoten Modal
+        function closeYokotenModal() {
+            yokotenModal.classList.add('opacity-0');
+            yokotenModalContent.classList.remove('scale-100');
+            yokotenModalContent.classList.add('scale-95');
+            setTimeout(() => {
+                yokotenModal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Event Delegation for Button Grid (Handles dynamic links and Yokoten button)
+        buttonGrid.addEventListener('click', (e) => {
+            const link = e.target.closest('.drive-link');
+            if (link) {
+                e.preventDefault();
+                openConfirmation(link.href);
+                return;
+            }
+
+            const btnYk = e.target.closest('#btnYokoten');
+            if (btnYk) {
+                openYokotenModal();
+            }
+        });
+
+        // Event Delegation for Yokoten Projects
+        projectList.addEventListener('click', (e) => {
+            const card = e.target.closest('.project-card');
+            if (card) {
+                const projectUrl = card.getAttribute('data-url');
+                closeYokotenModal();
+                setTimeout(() => {
+                    openConfirmation(projectUrl);
+                }, 200);
+            }
+        });
+
+        // Event Listeners for Modals
+        btnDecline.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        
+        btnConfirm.addEventListener('click', () => {
+            if (pendingUrl) {
+                window.open(pendingUrl, '_blank');
+                closeModal();
+            }
+        });
+
+        btnYokotenClose.addEventListener('click', closeYokotenModal);
+        yokotenModal.addEventListener('click', (e) => { if (e.target === yokotenModal) closeYokotenModal(); });
+
+    </script>
+</body>
+</html>

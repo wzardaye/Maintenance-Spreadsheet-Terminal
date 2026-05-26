@@ -1,0 +1,39 @@
+{
+    "buttons": [
+        { "title": "PM", "icon": "folder-kanban", "colorTheme": "green", "isYokoten": false, "url": "LINK_DRIVE_PM" },
+        { "title": "CM", "icon": "folder-search", "colorTheme": "sky", "isYokoten": false, "url": "LINK_DRIVE_CM" },
+        { "title": "BM", "icon": "folder-check", "colorTheme": "red", "isYokoten": false, "url": "LINK_DRIVE_BM" },
+        { "title": "YOKOTEN", "icon": "folder-sync", "colorTheme": "yellow", "isYokoten": true, "url": "" },
+        { "title": "Arsip Tahun Lalu", "icon": "database", "colorTheme": "orange", "isYokoten": false, "url": "LINK_DRIVE_ARSIP" },
+        { "title": "Admin Page", "icon": "settings", "colorTheme": "indigo", "isYokoten": false, "url": "LINK_DRIVE_ADMIN" }
+    ],
+    "yokotenProjects": [
+        {
+            "title": "Efisiensi Perakitan Line A",
+            "description": "Penerapan alat bantu baru untuk mengurangi waktu siklus pada stasiun kerja 3, meningkatkan output harian sebesar 15%.",
+            "image": "images/proyek1.jpg",
+            "initiatorInitials": "BP",
+            "initiatorName": "Budi Prakoso (Tim Produksi)",
+            "badgeColor": "blue",
+            "url": "LINK_PROYEK_EFISIENSI_LINE_A"
+        },
+        {
+            "title": "Reduksi Defect Pengecatan",
+            "description": "Standarisasi suhu dan kelembaban ruang oven untuk menekan cacat 'orange peel' dari 3% menjadi 0.5%.",
+            "image": "images/proyek2.jpg",
+            "initiatorInitials": "SA",
+            "initiatorName": "Siti Aminah (Quality Control)",
+            "badgeColor": "green",
+            "url": "LINK_PROYEK_REDUKSI_DEFECT"
+        },
+        {
+            "title": "Penghematan Energi Kompresor",
+            "description": "Pemasangan sensor gerak dan katup otomatis untuk mematikan aliran udara bertekanan saat mesin tidak beroperasi.",
+            "image": "images/proyek3.jpg",
+            "initiatorInitials": "AS",
+            "initiatorName": "Agus Salim (Maintenance)",
+            "badgeColor": "purple",
+            "url": "LINK_PROYEK_PENGHEMATAN_ENERGI"
+        }
+    ]
+}
