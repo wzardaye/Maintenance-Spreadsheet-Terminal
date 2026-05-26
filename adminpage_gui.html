@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Edit Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #f3f4f6; font-family: sans-serif; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 4px; mt-3; }
+        input[type="text"], textarea, select { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 0.875rem; margin-bottom: 12px; }
+        .project-item { border-left: 4px solid #3b82f6; padding-left: 16px; margin-bottom: 24px; }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Editor Portal Dinamis</h1>
+            <button onclick="saveConfig()" id="saveBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-bold shadow flex items-center gap-2 transition">
+                <i data-lucide="save" class="w-5 h-5"></i> Simpan Perubahan
+            </button>
+        </div>
+
+        <div id="statusMessage" class="hidden mb-4 p-4 rounded font-bold"></div>
+
+        <!-- Bagian Tombol Utama -->
+        <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">1. Konfigurasi 6 Tombol Utama</h2>
+        <div id="buttonsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Form tombol dirender lewat JS -->
+        </div>
+
+        <!-- Bagian Proyek Yokoten -->
+        <div class="flex justify-between items-center mt-8 mb-4 border-b pb-2">
+            <h2 class="text-xl font-bold text-gray-700">2. Daftar Proyek Yokoten (isDetailed)</h2>
+            <button onclick="addProject()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-bold flex items-center gap-1">
+                <i data-lucide="plus" class="w-4 h-4"></i> Tambah Proyek
+            </button>
+        </div>
+        <div id="projectsContainer" class="card">
+            <!-- Form proyek dirender lewat JS -->
+        </div>
+    </div>
+
+    <script>
+        let configData = { buttons: [], yokotenProjects: [] };
+        
+        // Pilihan warna untuk dropdown
+        const colors = ['blue', 'green', 'sky', 'red', 'yellow', 'orange', 'indigo', 'purple'];
+
+        // 1. Ambil data dari API saat halaman dimuat
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/getConfig');
+                if (!res.ok) throw new Error('Gagal mengambil data');
+                configData = await res.json();
+                renderForms();
+                lucide.createIcons();
+            } catch (err) {
+                showStatus('Gagal memuat data dari database. Pastikan API dan MongoDB terhubung.', 'error');
+            }
+        }
+
+        // 2. Tampilkan input form berdasarkan data
+        function renderForms() {
+            // Render 6 Tombol
+            const btnContainer = document.getElementById('buttonsContainer');
+            btnContainer.innerHTML = '';
+            configData.buttons.forEach((btn, index) => {
+                btnContainer.innerHTML += `
+                <div class="card">
+                    <h3 class="font-bold text-gray-700 mb-2">Tombol ${index + 1}</h3>
+                    <label>Judul Tombol</label>
+                    <input type="text" id="btn_title_${index}" value="${btn.title}">
+                    
+                    <label>URL (Link Drive)</label>
+                    <input type="text" id="btn_url_${index}" value="${btn.url}">
+                    
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label>Nama Icon (Lucide)</label>
+                            <input type="text" id="btn_icon_${index}" value="${btn.icon}">
+                        </div>
+                        <div class="flex-1">
+                            <label>Warna Tema</label>
+                            <select id="btn_color_${index}">
+                                ${colors.map(c => `<option value="${c}" ${btn.colorTheme === c ? 'selected' : ''}>${c}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <label class="flex items-center gap-2 cursor-pointer mt-2">
+                        <input type="checkbox" id="btn_isDetailed_${index}" ${btn.isDetailed ? 'checked' : ''}>
+                        <span class="font-normal text-sm">Gunakan modal pop-up Proyek (isDetailed)</span>
+                    </label>
+                </div>`;
+            });
+
+            // Render Proyek
+            renderProjects();
+        }
+
+        function renderProjects() {
+            const projContainer = document.getElementById('projectsContainer');
+            projContainer.innerHTML = '';
+            
+            if (configData.yokotenProjects.length === 0) {
+                projContainer.innerHTML = '<p class="text-gray-500 text-sm">Belum ada proyek. Klik "Tambah Proyek".</p>';
+                return;
+            }
+
+            configData.yokotenProjects.forEach((proj, index) => {
+                projContainer.innerHTML += `
+                <div class="project-item relative">
+                    <button onclick="removeProject(${index})" class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-sm font-bold flex items-center gap-1">
+                        Hapus Hapus
+                    </button>
+                    <label>Judul Proyek</label>
+                    <input type="text" id="proj_title_${index}" value="${proj.title}">
+                    
+                    <label>Deskripsi Singkat</label>
+                    <textarea id="proj_desc_${index}" rows="2">${proj.description}</textarea>
+                    
+                    <label>URL / Link Tautan</label>
+                    <input type="text" id="proj_url_${index}" value="${proj.url}">
+                    
+                    <label>Link Gambar (Lokasi file gambar)</label>
+                    <input type="text" id="proj_img_${index}" value="${proj.image}">
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label>Inisial (Maks 2 Huruf)</label>
+                            <input type="text" id="proj_initials_${index}" value="${proj.initiatorInitials}" maxlength="2">
+                        </div>
+                        <div>
+                            <label>Nama Inisiator & Departemen</label>
+                            <input type="text" id="proj_name_${index}" value="${proj.initiatorName}">
+                        </div>
+                        <div>
+                            <label>Warna Badge</label>
+                            <select id="proj_color_${index}">
+                                ${colors.map(c => `<option value="${c}" ${proj.badgeColor === c ? 'selected' : ''}>${c}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // Fungsi Tambah/Hapus Proyek (Hanya di tampilan, belum tersimpan ke DB sampai diklik Simpan)
+        function addProject() {
+            configData.yokotenProjects.push({
+                title: "Proyek Baru", description: "", image: "images/placeholder.jpg",
+                initiatorInitials: "XX", initiatorName: "Nama (Dept)", badgeColor: "blue", url: ""
+            });
+            syncInputsToData(); // Amankan data yang sedang diketik sebelum re-render
+            renderProjects();
+        }
+
+        function removeProject(index) {
+            if(confirm("Hapus proyek ini?")) {
+                syncInputsToData();
+                configData.yokotenProjects.splice(index, 1);
+                renderProjects();
+            }
+        }
+
+        // Kumpulkan data dari form untuk disinkronkan ke variable configData
+        function syncInputsToData() {
+            // Ambil data 6 tombol
+            for (let i = 0; i < configData.buttons.length; i++) {
+                if(!document.getElementById(`btn_title_${i}`)) continue;
+                configData.buttons[i].title = document.getElementById(`btn_title_${i}`).value;
+                configData.buttons[i].url = document.getElementById(`btn_url_${i}`).value;
+                configData.buttons[i].icon = document.getElementById(`btn_icon_${i}`).value;
+                configData.buttons[i].colorTheme = document.getElementById(`btn_color_${i}`).value;
+                configData.buttons[i].isDetailed = document.getElementById(`btn_isDetailed_${i}`).checked;
+            }
+            // Ambil data proyek
+            for (let i = 0; i < configData.yokotenProjects.length; i++) {
+                if(!document.getElementById(`proj_title_${i}`)) continue;
+                configData.yokotenProjects[i].title = document.getElementById(`proj_title_${i}`).value;
+                configData.yokotenProjects[i].description = document.getElementById(`proj_desc_${i}`).value;
+                configData.yokotenProjects[i].url = document.getElementById(`proj_url_${i}`).value;
+                configData.yokotenProjects[i].image = document.getElementById(`proj_img_${i}`).value;
+                configData.yokotenProjects[i].initiatorInitials = document.getElementById(`proj_initials_${i}`).value;
+                configData.yokotenProjects[i].initiatorName = document.getElementById(`proj_name_${i}`).value;
+                configData.yokotenProjects[i].badgeColor = document.getElementById(`proj_color_${i}`).value;
+            }
+        }
+
+        // 3. Simpan data kembali ke Database via API
+        async function saveConfig() {
+            const btn = document.getElementById('saveBtn');
+            btn.innerHTML = 'Menyimpan...';
+            btn.disabled = true;
+
+            syncInputsToData();
+
+            try {
+                const res = await fetch('/api/updateConfig', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(configData)
+                });
+                
+                if (!res.ok) throw new Error('Gagal menyimpan');
+                
+                showStatus('Perubahan berhasil disimpan! Refresh halaman portal utama untuk melihat hasil.', 'success');
+            } catch (err) {
+                showStatus('Gagal menyimpan data.', 'error');
+            } finally {
+                btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Simpan Perubahan`;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        function showStatus(msg, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = msg;
+            statusEl.className = `mb-4 p-4 rounded font-bold ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+            statusEl.classList.remove('hidden');
+            setTimeout(() => statusEl.classList.add('hidden'), 5000);
+        }
+
+        // Mulai aplikasi
+        loadConfig();
+    </script>
+</body>
+</html>
