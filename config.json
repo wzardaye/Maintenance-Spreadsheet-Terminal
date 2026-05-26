@@ -12,8 +12,8 @@
             "title": "Efisiensi Perakitan Line A",
             "description": "Penerapan alat bantu baru untuk mengurangi waktu siklus pada stasiun kerja 3, meningkatkan output harian sebesar 15%.",
             "image": "images/picture1.png",
-            "initiatorInitials": "BP",
-            "initiatorName": "Budi Prakoso (Tim Produksi)",
+            "initiatorInitials": "B",
+            "initiatorName": "Budi",
             "badgeColor": "blue",
             "url": "LINK_PROYEK_EFISIENSI_LINE_A"
         },
@@ -21,8 +21,8 @@
             "title": "Reduksi Defect Pengecatan",
             "description": "Standarisasi suhu dan kelembaban ruang oven untuk menekan cacat 'orange peel' dari 3% menjadi 0.5%.",
             "image": "images/picture2.jpg",
-            "initiatorInitials": "SA",
-            "initiatorName": "Siti Aminah (Quality Control)",
+            "initiatorInitials": "S",
+            "initiatorName": "Susi",
             "badgeColor": "green",
             "url": "LINK_PROYEK_REDUKSI_DEFECT"
         },
@@ -30,8 +30,8 @@
             "title": "Penghematan Energi Kompresor",
             "description": "Pemasangan sensor gerak dan katup otomatis untuk mematikan aliran udara bertekanan saat mesin tidak beroperasi.",
             "image": "images/picture3.jpg",
-            "initiatorInitials": "AS",
-            "initiatorName": "Agus Salim (Maintenance)",
+            "initiatorInitials": "R",
+            "initiatorName": "Rizki",
             "badgeColor": "purple",
             "url": "LINK_PROYEK_PENGHEMATAN_ENERGI"
         }
