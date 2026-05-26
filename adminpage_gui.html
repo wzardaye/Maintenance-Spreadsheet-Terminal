@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Edit Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { background-color: #f3f4f6; font-family: sans-serif; }
         .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
@@ -54,7 +54,21 @@
             try {
                 const res = await fetch('/api/getConfig');
                 if (!res.ok) throw new Error('Gagal mengambil data');
-                configData = await res.json();
+                
+                const fetchedData = await res.json();
+                
+                // Fallback: Jika DB kosong atau salah format, gunakan template default
+                configData.buttons = (fetchedData.buttons && fetchedData.buttons.length > 0) ? fetchedData.buttons : [
+                    { title: "PM", icon: "folder-kanban", colorTheme: "green", isDetailed: false, url: "" },
+                    { title: "CM", icon: "folder-search", colorTheme: "sky", isDetailed: false, url: "" },
+                    { title: "BM", icon: "folder-check", colorTheme: "red", isDetailed: false, url: "" },
+                    { title: "YOKOTEN", icon: "folder-sync", colorTheme: "yellow", isDetailed: true, url: "" },
+                    { title: "Arsip Tahun Lalu", icon: "database", colorTheme: "orange", isDetailed: false, url: "" },
+                    { title: "Admin Page", icon: "settings", colorTheme: "indigo", isDetailed: false, url: "admin.html" }
+                ];
+                
+                configData.yokotenProjects = fetchedData.yokotenProjects || [];
+
                 renderForms();
                 lucide.createIcons();
             } catch (err) {
@@ -114,7 +128,7 @@
                 projContainer.innerHTML += `
                 <div class="project-item relative">
                     <button onclick="removeProject(${index})" class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-sm font-bold flex items-center gap-1">
-                        Hapus Hapus
+                        Hapus
                     </button>
                     <label>Judul Proyek</label>
                     <input type="text" id="proj_title_${index}" value="${proj.title}">
