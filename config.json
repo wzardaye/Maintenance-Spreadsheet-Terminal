@@ -5,7 +5,7 @@
         { "title": "BM", "icon": "folder-check", "colorTheme": "red", "isDetailed": false, "url": "https://docs.google.com/spreadsheets/d/1Kku6njWoU4d3lhyrRvRIfJQvYhY7XuSt9eJ8wRdo7VU/edit?usp=sharing" },
         { "title": "YOKOTEN", "icon": "folder-sync", "colorTheme": "yellow", "isDetailed": true, "url": "" },
         { "title": "Arsip Tahun Lalu", "icon": "database", "colorTheme": "orange", "isDetailed": false, "url": "http://app.sugity.co.id:3001/item" },
-        { "title": "Admin Page", "icon": "settings", "colorTheme": "indigo", "isDetailed": false, "url": "admin.html" }
+        { "title": "Admin Page", "icon": "settings", "colorTheme": "indigo", "isDetailed": false, "url": "adminpage_gui.html" }
     ],
     "yokotenProjects": [
         {
