@@ -179,7 +179,7 @@
                 return `
                 <button 
                     data-url="${btn.url}" 
-                    data-isyokoten="${btn.isYokoten}"
+                    data-isdetailed="${btn.isDetailed}"
                     class="portal-btn animate-fade-up glass-panel rounded-3xl p-8 flex flex-col items-center justify-center gap-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${t.shadow} group w-full"
                     style="animation-delay: ${delay}s;"
                 >
@@ -251,7 +251,7 @@
             const btn = e.target.closest('.portal-btn');
             if (!btn) return;
             
-            if (btn.dataset.isyokoten === "true") {
+            if (btn.dataset.isdetailed === "true") {
                 toggleModal(yokotenModal, yokotenModalContent, true);
             } else {
                 openConfirmation(btn.dataset.url);
