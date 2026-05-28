@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Preventive Maintenance - Sugity Creatives</title>
+    <title>Portal Drive - Workplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -61,7 +61,7 @@
             <div class="flex items-center gap-3">
                 <img src="images/logo.png" alt="Logo" class="w-12 h-12 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <i data-lucide="briefcase" class="w-8 h-8 text-blue-800 hidden"></i>
-                <span class="text-2xl font-extrabold text-gray-900 tracking-tight" id="siteTitle">Sugity Creatives</span>
+                <span class="text-2xl font-extrabold text-gray-900 tracking-tight" id="siteTitle">WorkplaceHub</span>
             </div>
         </div>
     </header>
@@ -147,7 +147,8 @@
 
         async function initPortal() {
             try {
-                const response = await fetch('config.json');
+                // MENGUBAH FETCH URL KE ENDPOINT API VERCEL
+                const response = await fetch('/api/getConfig');
                 if (!response.ok) throw new Error('Network response was not ok');
                 const config = await response.json();
 
@@ -176,10 +177,13 @@
                 const t = themeMap[btn.colorTheme] || themeMap.blue;
                 const delay = (index + 2) * 0.1; // Staggered animation delay
                 
+                // Perbaikan: Mendukung properti isDetailed (dari admin.html) dan isYokoten (dari config.json)
+                const isDetailedBtn = btn.isDetailed === true || btn.isYokoten === true;
+                
                 return `
                 <button 
-                    data-url="${btn.url}" 
-                    data-isdetailed="${btn.isDetailed}"
+                    data-url="${btn.url || ''}" 
+                    data-isdetailed="${isDetailedBtn}"
                     class="portal-btn animate-fade-up glass-panel rounded-3xl p-8 flex flex-col items-center justify-center gap-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${t.shadow} group w-full"
                     style="animation-delay: ${delay}s;"
                 >
