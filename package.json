@@ -6,6 +6,6 @@
     "start": "node api/getConfig.js"
   },
   "dependencies": {
-    "mongodb": "^6.3.0"
+    "mongoose": "^8.4.0"
   }
 }
