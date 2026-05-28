@@ -1,31 +1,24 @@
 const mongoose = require('mongoose');
 
 const uri = process.env.MONGODB_URI;
+if (!uri) throw new Error('Please add your Mongo URI to .env.local');
 
-if (!uri) {
-  throw new Error('Please add your Mongo URI to .env.local');
-}
+// Buat Schema fleksibel agar Mongoose otomatis menangani koneksi collection-nya
+const ConfigSchema = new mongoose.Schema({}, { strict: false, versionKey: false });
+const ConfigModel = mongoose.models.Config || mongoose.model('Config', ConfigSchema, 'portal_config');
 
 module.exports = async (req, res) => {
   try {
-    // Mencegah koneksi berulang di lingkungan serverless (Vercel)
     if (mongoose.connection.readyState !== 1) {
-      await mongoose.connect(uri, {
-        dbName: 'portal_db',
-        serverSelectionTimeoutMS: 5000,
-      });
+      await mongoose.connect(uri, { dbName: 'portal_db', serverSelectionTimeoutMS: 5000 });
     }
 
-    const db = mongoose.connection.db;
-    const collection = db.collection('portal_config');
-    
-    const configData = await collection.findOne({}); 
+    const configData = await ConfigModel.findOne({}).lean(); 
     
     if (!configData) {
       return res.status(404).json({ error: 'Config tidak ditemukan di database' });
     }
 
-    // Hapus _id bawaan MongoDB agar tidak masuk ke frontend
     delete configData._id;
     res.status(200).json(configData);
   } catch (error) {
