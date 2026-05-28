@@ -26,7 +26,12 @@
         <div id="statusMessage" class="hidden mb-4 p-4 rounded font-bold"></div>
 
         <!-- Bagian Tombol Utama -->
-        <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">1. Konfigurasi 6 Tombol Utama</h2>
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-xl font-bold text-gray-700">1. Konfigurasi Tombol Utama</h2>
+            <button onclick="addButton()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-bold flex items-center gap-1">
+                <i data-lucide="plus" class="w-4 h-4"></i> Tambah Tombol
+            </button>
+        </div>
         <div id="buttonsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Form tombol dirender lewat JS -->
         </div>
@@ -78,12 +83,25 @@
 
         // 2. Tampilkan input form berdasarkan data
         function renderForms() {
-            // Render 6 Tombol
+            renderButtonsList();
+            renderProjects();
+        }
+
+        function renderButtonsList() {
             const btnContainer = document.getElementById('buttonsContainer');
             btnContainer.innerHTML = '';
+            
+            if (!configData.buttons || configData.buttons.length === 0) {
+                btnContainer.innerHTML = '<p class="text-gray-500 text-sm col-span-2">Belum ada tombol. Klik "Tambah Tombol".</p>';
+                return;
+            }
+
             configData.buttons.forEach((btn, index) => {
                 btnContainer.innerHTML += `
-                <div class="card">
+                <div class="card relative">
+                    <button onclick="removeButton(${index})" class="absolute top-4 right-4 text-red-500 hover:text-red-700 text-sm font-bold flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
                     <h3 class="font-bold text-gray-700 mb-2">Tombol ${index + 1}</h3>
                     <label>Judul Tombol</label>
                     <input type="text" id="btn_title_${index}" value="${btn.title}">
@@ -110,9 +128,7 @@
                     </label>
                 </div>`;
             });
-
-            // Render Proyek
-            renderProjects();
+            lucide.createIcons();
         }
 
         function renderProjects() {
@@ -124,43 +140,29 @@
                 return;
             }
 
-            configData.yokotenProjects.forEach((proj, index) => {
-                projContainer.innerHTML += `
-                <div class="project-item">
-                    <button onclick="removeProject(${index})" class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-sm font-bold flex items-center gap-1">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus
-                    </button>
-                    <label>Judul Proyek</label>
-                    <input type="text" id="proj_title_${index}" value="${proj.title || ''}">
-                    
-                    <label>Deskripsi Singkat</label>
-                    <textarea id="proj_desc_${index}" rows="2">${proj.description || ''}</textarea>
-                    
-                    <label>URL / Link Tautan</label>
-                    <input type="text" id="proj_url_${index}" value="${proj.url || ''}">
-                    
-                    <label>Link Gambar (Lokasi file gambar)</label>
-                    <input type="text" id="proj_img_${index}" value="${proj.image || ''}">
-                    
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label>Inisial (Maks 2)</label>
-                            <input type="text" id="proj_initials_${index}" value="${proj.initiatorInitials || ''}" maxlength="2">
-                        </div>
-                        <div>
-                            <label>Nama & Dept</label>
-                            <input type="text" id="proj_name_${index}" value="${proj.initiatorName || ''}">
-                        </div>
-                        <div>
-                            <label>Warna Badge</label>
-                            <select id="proj_color_${index}">
-                                ${colors.map(c => `<option value="${c}" ${proj.badgeColor === c ? 'selected' : ''}>${c}</option>`).join('')}
-                            </select>
-                        </div>
-                    </div>
-                </div>`;
+        // Fungsi Tambah/Hapus Tombol Utama
+        function addButton() {
+            if (!configData.buttons) configData.buttons = [];
+            
+            syncInputsToData(); 
+            
+            configData.buttons.push({
+                title: "Tombol Baru",
+                icon: "folder",
+                colorTheme: "blue",
+                isDetailed: false,
+                url: ""
             });
-            lucide.createIcons();
+            
+            renderButtonsList();
+        }
+
+        function removeButton(index) {
+            if(confirm("Hapus tombol ini?")) {
+                syncInputsToData();
+                configData.buttons.splice(index, 1);
+                renderButtonsList();
+            }
         }
 
         // Fungsi Tambah/Hapus Proyek
