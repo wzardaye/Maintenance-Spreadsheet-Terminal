@@ -1,23 +1,9 @@
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
 const uri = process.env.MONGODB_URI;
 
-let client;
-let clientPromise;
-
-if (!process.env.MONGODB_URI) {
+if (!uri) {
   throw new Error('Please add your Mongo URI to .env.local');
-}
-
-if (process.env.NODE_ENV === 'development') {
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri); // Tidak pakai options
-    global._mongoClientPromise = client.connect();
-  }
-  clientPromise = global._mongoClientPromise;
-} else {
-  client = new MongoClient(uri); // Tidak pakai options
-  clientPromise = client.connect();
 }
 
 module.exports = async (req, res) => {
@@ -26,8 +12,15 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const databaseClient = await clientPromise;
-    const db = databaseClient.db('portal_db');
+    // Mencegah koneksi berulang di lingkungan serverless (Vercel)
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(uri, {
+        dbName: 'portal_db',
+        serverSelectionTimeoutMS: 5000,
+      });
+    }
+
+    const db = mongoose.connection.db;
     const collection = db.collection('portal_config');
     
     let newData = req.body;
@@ -37,10 +30,9 @@ module.exports = async (req, res) => {
         newData = JSON.parse(newData);
     }
 
-    // Pastikan tidak ada _id yang terkirim agar tidak memicu immutable error
+    // Hapus _id agar tidak memicu error immutable field saat update
     delete newData._id;
 
-    // Menggunakan updateOne + $set lebih kebal error daripada replaceOne
     await collection.updateOne(
         {}, 
         { $set: newData }, 
@@ -50,7 +42,6 @@ module.exports = async (req, res) => {
     res.status(200).json({ success: true, message: 'Konfigurasi berhasil disimpan' });
   } catch (error) {
     console.error("DB Update Error:", error);
-    // Mengembalikan pesan error spesifik agar mudah di-debug
     res.status(500).json({ error: 'Gagal menyimpan ke database: ' + error.message });
   }
 };
