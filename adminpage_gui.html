@@ -140,6 +140,45 @@
                 return;
             }
 
+            configData.yokotenProjects.forEach((proj, index) => {
+                projContainer.innerHTML += `
+                <div class="project-item relative">
+                    <button onclick="removeProject(${index})" class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-sm font-bold flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus
+                    </button>
+                    <label>Judul Proyek</label>
+                    <input type="text" id="proj_title_${index}" value="${proj.title || ''}">
+                    
+                    <label>Deskripsi Singkat</label>
+                    <textarea id="proj_desc_${index}" rows="2">${proj.description || ''}</textarea>
+                    
+                    <label>URL / Link Tautan</label>
+                    <input type="text" id="proj_url_${index}" value="${proj.url || ''}">
+                    
+                    <label>Link Gambar (Lokasi file gambar)</label>
+                    <input type="text" id="proj_img_${index}" value="${proj.image || ''}">
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label>Inisial (Maks 2)</label>
+                            <input type="text" id="proj_initials_${index}" value="${proj.initiatorInitials || ''}" maxlength="2">
+                        </div>
+                        <div>
+                            <label>Nama & Dept</label>
+                            <input type="text" id="proj_name_${index}" value="${proj.initiatorName || ''}">
+                        </div>
+                        <div>
+                            <label>Warna Badge</label>
+                            <select id="proj_color_${index}">
+                                ${colors.map(c => `<option value="${c}" ${proj.badgeColor === c ? 'selected' : ''}>${c}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            lucide.createIcons();
+        }
+
         // Fungsi Tambah/Hapus Tombol Utama
         function addButton() {
             if (!configData.buttons) configData.buttons = [];
