@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Edit Portal</title>
+    <title>Portal Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -17,7 +17,7 @@
 <body class="p-6">
     <div class="max-w-4xl mx-auto">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">Editor Portal Dinamis</h1>
+            <h1 class="text-3xl font-bold text-gray-800">Edit Info Laman</h1>
             <button onclick="saveConfig()" id="saveBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-bold shadow flex items-center gap-2 transition">
                 <i data-lucide="save" class="w-5 h-5"></i> Simpan Perubahan
             </button>
@@ -26,14 +26,14 @@
         <div id="statusMessage" class="hidden mb-4 p-4 rounded font-bold"></div>
 
         <!-- Bagian Tombol Utama -->
-        <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">1. Konfigurasi 6 Tombol Utama</h2>
+        <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">Konfigurasi Tombol-Tombol Utama</h2>
         <div id="buttonsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Form tombol dirender lewat JS -->
         </div>
 
         <!-- Bagian Proyek Yokoten -->
         <div class="flex justify-between items-center mt-8 mb-4 border-b pb-2">
-            <h2 class="text-xl font-bold text-gray-700">2. Daftar Proyek Yokoten (isDetailed)</h2>
+            <h2 class="text-xl font-bold text-gray-700">Yokoten</h2>
             <button onclick="addProject()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-bold flex items-center gap-1">
                 <i data-lucide="plus" class="w-4 h-4"></i> Tambah Proyek
             </button>
