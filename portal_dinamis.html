@@ -52,8 +52,8 @@
 </head>
 <body class="bg-custom min-h-screen relative text-gray-800 antialiased">
     
-    <!-- Overlay gradien untuk memastikan teks mudah dibaca di atas background apa pun -->
-    <div class="absolute inset-0 bg-gradient-to-br from-white/60 to-white/20 backdrop-blur-sm fixed pointer-events-none"></div>
+    <!-- Global Blur Overlay -->
+    <div class="absolute inset-0 bg-white/40 backdrop-blur-lg fixed pointer-events-none"></div>
 
     <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b-white/40 shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -84,25 +84,27 @@
         </div>
     </main>
 
-    <!-- Modal Konfirmasi -->
-    <div id="confirmationModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-gray-900/40 backdrop-blur-md transition-all duration-300 opacity-0">
-        <div class="bg-white/95 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-2xl max-w-md w-full mx-4 transform scale-95 transition-transform duration-300" id="modalContent">
+    <!-- Confirmation Modal Overlay -->
+    <div id="confirmationModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-gray-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0">
+        <div class="bg-white/90 backdrop-blur-lg border border-white/50 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform scale-95 transition-transform duration-300" id="modalContent">
             <div class="text-center">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-50 mb-6 shadow-inner ring-4 ring-blue-50/50">
-                    <i data-lucide="external-link" class="h-8 w-8 text-blue-600"></i>
+                <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-blue-100 mb-5 shadow-inner">
+                    <i data-lucide="external-link" class="h-7 w-7 text-blue-600"></i>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-2">Konfirmasi Tautan</h3>
-                <p class="text-gray-600 mb-5">Anda akan diarahkan ke luar portal menuju tautan berikut:</p>
+                <p class="text-gray-600 text-md mb-4">Anda akan masuk ke link berikut ini:</p>
                 
-                <div class="bg-gray-50 p-4 rounded-2xl mb-8 break-all border border-gray-200 shadow-inner max-h-32 overflow-y-auto custom-scrollbar">
-                    <p id="modalLinkText" class="text-sm font-mono text-blue-700 font-medium select-all text-left"></p>
+                <!-- Display Link Area -->
+                <div class="bg-gray-100/80 p-4 rounded-xl mb-8 break-all border border-gray-200 shadow-sm max-h-32 overflow-y-auto">
+                    <p id="modalLinkText" class="text-sm font-mono text-blue-700 font-medium select-all"></p>
                 </div>
                 
-                <div class="flex justify-center gap-3">
-                    <button id="btnDecline" class="flex-1 px-5 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors duration-200">
+                <!-- Action Buttons -->
+                <div class="flex justify-center gap-4">
+                    <button id="btnDecline" class="flex-1 px-5 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-all duration-200">
                         Batal
                     </button>
-                    <button id="btnConfirm" class="flex-1 px-5 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-200 shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] hover:-translate-y-0.5">
+                    <button id="btnConfirm" class="flex-1 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5">
                         Lanjutkan
                     </button>
                 </div>
@@ -111,23 +113,24 @@
     </div>
 
     <!-- Modal Yokoten -->
-    <div id="yokotenModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center bg-gray-900/50 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div class="bg-white/95 backdrop-blur-xl border border-white/50 p-6 md:p-8 rounded-3xl shadow-2xl max-w-2xl w-full mx-4 transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="yokotenModalContent">
+    <div id="yokotenModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center bg-gray-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0">
+        <div class="bg-white/95 backdrop-blur-lg border border-white/50 p-6 md:p-8 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="yokotenModalContent">
             
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
-                <div class="flex items-center gap-4">
-                    <div class="p-2.5 bg-yellow-100 rounded-xl shadow-inner">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-yellow-400/20 rounded-lg">
                         <i data-lucide="folder-sync" class="w-6 h-6 text-yellow-600"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900">Proyek YOKOTEN</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">Daftar Proyek YOKOTEN</h3>
                 </div>
                 <button id="btnYokotenClose" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
                 </button>
             </div>
 
+            <!-- Scrollable Projects List (Will be populated by JavaScript) -->
             <div id="yokotenProjectList" class="flex-1 overflow-y-auto pr-2 space-y-4 custom-scrollbar">
-                <!-- Render via JS -->
+                <!-- Projects dynamically rendered here -->
             </div>
         </div>
     </div>
